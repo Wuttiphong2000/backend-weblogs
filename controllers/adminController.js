@@ -22,7 +22,7 @@ export const adminLogin = async (req, res) => {
 export const getAllBlogsAdmin = async (req, res) => {
   try {
     const blogs = await Blog.find({}).sort({ createAt: -1 });
-    res.json({ success: false, blogs });
+    res.json({ success: true, blogs });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -30,10 +30,10 @@ export const getAllBlogsAdmin = async (req, res) => {
 
 export const getAllComments = async (req, res) => {
   try {
-    const comment = await Comment.find({})
+    const comments = await Comment.find({})
       .populate("blog")
       .sort({ createAt: -1 });
-    res.json({ success: false, comment });
+    res.json({ success: true, comments });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -41,7 +41,7 @@ export const getAllComments = async (req, res) => {
 
 export const getDashboard = async (req, res) => {
   try {
-    const recentBlog = await Blog.find({}).sort({ createAt: -1 }).limit(5);
+    const recentBlogs = await Blog.find({}).sort({ createdAt: -1 }).limit(5);
     const blogs = await Blog.countDocuments();
     const comments = await Comment.countDocuments();
     const drafts = await Blog.countDocuments({ isPublished: false });
@@ -50,9 +50,9 @@ export const getDashboard = async (req, res) => {
       blogs,
       comments,
       drafts,
-      recentBlog,
+      recentBlogs,
     };
-    res.json({ success: false, dashboardData });
+    res.json({ success: true, dashboardData });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -63,7 +63,7 @@ export const deleteCommentById = async (req, res) => {
     try {
         const {id} = req.body;
         await Comment.findByIdAndDelete(id);
-        res.json({ success: false, message: "Comment deleted successfully" });
+        res.json({ success: true, message: "Comment deleted successfully" });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
@@ -73,7 +73,7 @@ export const approveCommentById = async (req, res) => {
     try {
         const {id} = req.body;
         await Comment.findByIdAndUpdate(id, {isApproved:true});
-        res.json({ success: false, message: "Comment approved successfully" });
+        res.json({ success: true, message: "Comment approved successfully" });
     } catch (error) {
         res.json({ success: false, message: error.message });
     }
